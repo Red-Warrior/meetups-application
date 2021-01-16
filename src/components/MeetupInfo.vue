@@ -33,6 +33,10 @@ export default {
       type: String,
       required: true,
     },
+    date: {
+      type: Date,
+      required: true,
+    },
   },
 
   computed: {

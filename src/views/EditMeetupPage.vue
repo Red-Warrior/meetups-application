@@ -1,5 +1,6 @@
 <template>
   <meetup-form
+    v-if="meetup"
     :meetup="meetup"
     submit-text="Сохранить"
     @submit="handleSubmit"
@@ -19,15 +20,7 @@ export default {
 
   data() {
     return {
-      meetup: {
-        id: 0,
-        title: '',
-        description: '',
-        imageId: null,
-        date: new Date(),
-        place: '',
-        agenda: [],
-      },
+      meetup: null,
     };
   },
 

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="reformedMeetup">
+  <div v-if="reformedMeetup" class="bg-white">
     <div class="meetup-cover" :style="reformedMeetup.image">
       <h1 class="meetup-cover__title">{{ reformedMeetup.title }}</h1>
     </div>

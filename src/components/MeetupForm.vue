@@ -62,6 +62,9 @@
 </template>
 
 <script>
+// const nanoid = require('nanoid');
+import { nanoid } from 'nanoid';
+
 import MeetupAgendaItemForm from '@/components/MeetupAgendaItemForm';
 import ImageUploader from '@/components/ImageUploader';
 import FormGroup from '@/components/FormGroup';
@@ -71,14 +74,14 @@ import SecondaryButton from '@/components/SecondaryButton';
 
 function buildAgendaItem() {
   return {
-    id: Math.random(),
+    id: nanoid(),
     startsAt: '00:00',
     endsAt: '00:00',
     type: 'other',
     title: null,
     description: null,
     speaker: null,
-    language: null,
+    language: 'null',
   };
 }
 
@@ -135,9 +138,6 @@ export default {
     removeAgendaItem(idx) {
       this.localMeetup.agenda.splice(idx, 1);
     },
-    /*titleVariation() {
-      return this.$route.name === 'create';
-    },*/
   },
 };
 </script>

@@ -64,12 +64,6 @@ export const agendaItemIcons = {
   other: require('@/assets/icons/icon-cal-sm.svg'),
 };
 
-export const getAgendaItemLanguageOptions = () => [
-  { value: null, text: 'Не указано' },
-  { value: 'RU', text: 'RU' },
-  { value: 'EN', text: 'EN' },
-];
-
 export const agendaIconMap = {
   registration: 'key',
   opening: 'cal-sm',
@@ -192,3 +186,9 @@ export const getAgendaItemsFieldSpecifications = () => {
     ],
   };
 };
+
+export const getAgendaItemLanguageOptions = () => [
+  { value: 'null', text: 'Не указано' },
+  { value: 'RU', text: 'RU' },
+  { value: 'EN', text: 'EN' },
+];

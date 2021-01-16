@@ -1,10 +1,5 @@
 <template>
-<meetup-form
-  :meetup="meetup"
-  submit-text="Создать"
-  @submit="handleSubmit"
-  @cancel="handleCancel"
-/>
+  <meetup-form :meetup="meetup" submit-text="Создать" @submit="handleSubmit" @cancel="handleCancel" />
 </template>
 
 <script>
@@ -25,7 +20,18 @@ export default {
         imageId: null,
         date: new Date(),
         place: '',
-        agenda: [],
+        agenda: [
+          /*{
+            id: 0,
+            startsAt: '00:00',
+            endsAt: '00:00',
+            type: 'other',
+            title: null,
+            description: null,
+            speaker: null,
+            language: null,
+          },*/
+        ],
       },
     };
   },
@@ -42,6 +48,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

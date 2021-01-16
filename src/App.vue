@@ -1,10 +1,8 @@
 <template>
   <div id="app">
-    <div class="wrapper bg-grey">
-      <base-layout>
-        <router-view />
-      </base-layout>
-    </div>
+    <base-layout class="wrapper bg-grey">
+      <router-view />
+    </base-layout>
   </div>
 </template>
 

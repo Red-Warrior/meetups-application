@@ -5,40 +5,28 @@
     </button>
 
     <form-group>
-    <dropdown-button
-      title="Тип"
-      :options="$options.agendaItemTypes"
-      v-model="localAgenda.type"
-    />
+      <dropdown-button title="Тип" :options="$options.agendaItemTypes" v-model="localAgenda.type" />
     </form-group>
 
     <div class="form__row">
       <div class="form__col">
         <form-group label="Начало">
-          <app-input
-            type="time"
-            placeholder="00:00"
-            v-model="localAgenda.startsAt"
-            @change="changeAgendaItem"
-          />
+          <app-input type="time" placeholder="00:00" v-model="localAgenda.startsAt" @change="changeAgendaItem" />
         </form-group>
       </div>
 
       <div class="form__col">
         <form-group label="Окончание">
-          <app-input
-            type="time"
-            placeholder="00:00"
-            v-model="localAgenda.endsAt"
-          />
+          <app-input type="time" placeholder="00:00" v-model="localAgenda.endsAt" />
         </form-group>
       </div>
     </div>
 
-
-    <form-group v-for="agendaField in $options.fieldSpecifications[localAgenda.type]"
-                :key="agendaField.field"
-                :label="agendaField.title">
+    <form-group
+      v-for="agendaField in $options.fieldSpecifications[localAgenda.type]"
+      :key="agendaField.field"
+      :label="agendaField.title"
+    >
       <component
         v-bind="agendaField.props"
         :is="agendaField.component"
@@ -47,7 +35,6 @@
       >
       </component>
     </form-group>
-
   </div>
 </template>
 

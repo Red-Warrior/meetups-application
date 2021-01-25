@@ -40,12 +40,18 @@ export const router = new VueRouter({
           name: 'meetup-description',
           props: true,
           component: () => import('@/views/MeetupDescriptionPage'),
+          meta: {
+            saveScrollPosition: true,
+          },
         },
         {
           path: 'agenda',
           name: 'meetup-agenda',
           props: true,
           component: () => import('@/views/MeetupAgendaPage'),
+          meta: {
+            saveScrollPosition: true,
+          },
         },
       ],
     },

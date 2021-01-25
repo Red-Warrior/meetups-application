@@ -13,7 +13,7 @@
             </form-group>
 
             <form-group label="Дата">
-              <app-input type="date" v-model="localMeetup.date" />
+              <date-input :date-value.sync="localMeetup.date" />
             </form-group>
 
             <form-group label="Место проведения">
@@ -25,7 +25,7 @@
             </form-group>
 
             <form-group label="Изображение">
-              <image-uploader :value="localMeetup.imageId" @change="localMeetup.imageId = $event" />
+              <image-uploader v-model="imageId" />
             </form-group>
           </fieldset>
 
@@ -68,6 +68,7 @@ import { nanoid } from 'nanoid';
 import MeetupAgendaItemForm from '@/components/MeetupAgendaItemForm';
 import ImageUploader from '@/components/ImageUploader';
 import FormGroup from '@/components/FormGroup';
+import DateInput from '@/components/DateInput';
 import AppInput from '@/components/AppInput';
 import PrimaryButton from '@/components/PrimaryButton';
 import SecondaryButton from '@/components/SecondaryButton';
@@ -81,7 +82,7 @@ function buildAgendaItem() {
     title: null,
     description: null,
     speaker: null,
-    language: 'null',
+    language: null,
   };
 }
 
@@ -96,6 +97,7 @@ export default {
     ImageUploader,
     MeetupAgendaItemForm,
     FormGroup,
+    DateInput,
     AppInput,
     PrimaryButton,
     SecondaryButton,
@@ -117,6 +119,7 @@ export default {
   data() {
     return {
       localMeetup: deepClone(this.meetup),
+      imageId: null,
     };
   },
 

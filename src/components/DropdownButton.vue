@@ -1,7 +1,7 @@
 <template>
   <div @click="state = !state" class="dropdown" :class="{ show: state }">
-    <button type="button" class="button dropdown__toggle" :class="{ 'dropdown__toggle_icon': hasIcon }">
-      <template v-if="value">
+    <button type="button" class="button dropdown__toggle" :class="{ dropdown__toggle_icon: hasIcon }">
+      <template v-if="selectedValue">
         <app-icon v-if="hasIcon" :icon="selectedValue.icon" />
         {{ title }} {{ `- ${selectedValue.text}` }}
       </template>
@@ -9,10 +9,13 @@
     </button>
 
     <div class="dropdown__menu" :class="{ show: state }">
-      <button @click="change(item)" v-for="item in options" class="dropdown__item"
-              :key="item.value"
-              :class="{ 'dropdown__item_icon': hasIcon }"
-              type="button"
+      <button
+        @click="change(item)"
+        v-for="item in options"
+        class="dropdown__item"
+        :key="item.value"
+        :class="{ dropdown__item_icon: hasIcon }"
+        type="button"
       >
         <app-icon v-if="item.icon" :icon="item.icon" />
         {{ item.text }}
@@ -63,11 +66,11 @@ export default {
 
   computed: {
     hasIcon() {
-      return this.options.some((item) => item.icon);
+      return this.options.some(item => item.icon);
     },
 
     selectedValue() {
-      return this.options.find((option) => option.value === this.value);
+      return this.options.find(option => option.value === this.value);
     },
   },
 };
@@ -83,7 +86,7 @@ export default {
   color: initial;
   text-align: center;
   border: 4px solid transparent;
-  transition: .2s all;
+  transition: 0.2s all;
   outline: none;
   box-shadow: none;
   background-color: transparent;
@@ -117,7 +120,7 @@ export default {
   display: block;
   width: 24px;
   height: 24px;
-  transition: .2s transform;
+  transition: 0.2s transform;
 }
 
 .button.dropdown__toggle.dropdown__toggle_icon {

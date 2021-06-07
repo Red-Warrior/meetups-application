@@ -1,27 +1,27 @@
+<!-- Каждый митап - ссылка на страницу митапа -->
+<!-- Используя слот требуется вывести список митапов дня в каждой ячейке -->
+<!--
+<router-link
+  :to="{ name: 'meetup', params: { meetupId: meetup.id } }"
+  class="rangepicker__event"
+  >{{ meetup.title }}</router-link
+>
+-->
 <template>
-  <div class="rangepicker">
-    <div class="rangepicker__calendar">
-      <div class="rangepicker__month-indicator">
-        <div class="rangepicker__selector-controls">
-          <button @click="previousMonth" class="rangepicker__selector-control-left"></button>
-          <div>{{ calendarHeader.month }} {{ calendarHeader.year }}</div>
-          <button @click="nextMonth" class="rangepicker__selector-control-right"></button>
-        </div>
-      </div>
-      <div class="rangepicker__date-grid">
-        <div v-for="day in currentMonthList" :key="day.dateToString"
-             :class="{'rangepicker__cell': true, 'rangepicker__cell_inactive': day.currentMonth === false }">
-          {{ day.currentDate }}
-          <a v-for="meetup in meetupsDays[day.dateToString]"
-             :key="meetup"
-             class="rangepicker__event">{{ meetup }}</a>
-        </div>
-      </div>
-    </div>
-  </div>
+  <calendar-view v-slot="{ day }">
+    <router-link
+      v-for="meetup in meetupsDays[day.dateToString]"
+      :key="meetup.title"
+      :to="{ name: 'meetup', params: { meetupId: meetup.id } }"
+      class="rangepicker__event"
+    >
+      {{ meetup.title }}
+    </router-link>
+  </calendar-view>
 </template>
 
 <script>
+import CalendarView from './CalendarView';
 
 export default {
   name: 'MeetupsCalendar',
@@ -33,176 +33,28 @@ export default {
     },
   },
 
-  data() {
-    return {
-      currentDate: new Date(),
-    };
+  components: {
+    CalendarView,
   },
 
   computed: {
-    calendarHeader() {
-      return {
-        month: this.currentDate.toLocaleString(navigator.language, {
-          month: 'long',
-        }),
-        year: this.currentDate.getFullYear(),
-      };
-    },
-
-    currentMonthList() {
-      let currentMonth = [];
-      let firstDay = new Date(this.currentDate.setDate(1));
-
-      let dayOfWeek = (new Date(firstDay).getDay() === 2) ? new Date(firstDay).setDate(new Date(firstDay).getDate() - 1) :
-        (new Date(firstDay).getDay() === 3) ? new Date(firstDay).setDate(new Date(firstDay).getDate() - 2) :
-          (new Date(firstDay).getDay() === 4) ? new Date(firstDay).setDate(new Date(firstDay).getDate() - 3) :
-            (new Date(firstDay).getDay() === 5) ? new Date(firstDay).setDate(new Date(firstDay).getDate() - 4) :
-              (new Date(firstDay).getDay() === 6) ? new Date(firstDay).setDate(new Date(firstDay).getDate() - 5) :
-                (new Date(firstDay).getDay() === 0) ? new Date(firstDay).setDate(new Date(firstDay).getDate() - 6) :
-                  firstDay;
-
-      for (let i = 0; i < 42; i++) {
-        let currentDate = new Date(this.currentDate);
-        let currentDay = new Date(dayOfWeek).setDate(new Date(dayOfWeek).getDate() + i);
-
-        let matchingFirstDay = (new Date(currentDate.setMonth(currentDate.getMonth() + 1))
-          .getMonth() === new Date(currentDay).getMonth()) && new Date(currentDay).getDay() === 1;
-        let matchingLastDay = new Date(currentDay).getMonth() === new Date(currentDate.setMonth(currentDate.getMonth() + 1))
-          .getMonth() && new Date(currentDay).getDay() === 0;
-
-        if (matchingFirstDay) break;
-        if (matchingLastDay) break;
-
-        currentMonth.push({
-          currentDate: new Date(currentDay).getDate(),
-          currentMonth: new Date(this.currentDate).getMonth() === new Date(currentDay).getMonth(),
-          dateToString: new Date(currentDay).toDateString(),
-        });
-      }
-      return currentMonth;
-    },
-
     meetupsDays() {
       const result = {};
       this.meetups.forEach((meetup) => {
         const dateString = new Date(meetup.date).toDateString();
         if (!result[dateString]) {
-          result[dateString] = [meetup.title];
+          result[dateString] = [{ title: meetup.title, id: meetup.id }];
         } else {
-          result[dateString].push(meetup.title);
+          result[dateString].push({ title: meetup.title, id: meetup.id });
         }
       });
       return result;
     },
   },
-
-  methods: {
-    nextMonth() {
-      this.currentDate = new Date(this.currentDate.setMonth(this.currentDate.getMonth() + 1));
-    },
-    previousMonth() {
-      this.currentDate = new Date(this.currentDate.setMonth(this.currentDate.getMonth() - 1));
-    },
-  },
 };
-
 </script>
 
 <style scoped>
-.rangepicker {
-  position: relative;
-  margin: 32px 0 0;
-}
-
-.rangepicker__selector {
-  display: flex;
-  background-color: var(--white);
-  flex-direction: row;
-  justify-content: space-between;
-  flex: 1 0 100%;
-}
-
-.rangepicker__calendar {
-  flex-grow: 1;
-}
-
-.rangepicker__month-indicator {
-  text-align: center;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 1;
-  color: var(--blue);
-  background-color: var(--blue-extra);
-  padding: 24px;
-  display: flex;
-  justify-content: center;
-}
-
-.rangepicker__selector-controls {
-  max-width: 325px;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  text-transform: capitalize;
-}
-.rangepicker__selector-controls button {
-  border: none;
-  padding: 0;
-}
-
-.rangepicker__selector-control-left,
-.rangepicker__selector-control-right {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.3s all;
-  background: url("../assets/icons/icon-pill-active.svg") left center no-repeat;
-  background-size: cover;
-}
-
-.rangepicker__selector-control-left:hover,
-.rangepicker__selector-control-right:hover {
-  opacity: 0.8;
-}
-
-.rangepicker__selector-control-right {
-  transform: rotate(180deg);
-}
-
-.rangepicker__date-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-}
-
-/* Dates */
-.rangepicker__date-grid {
-  border: 1px solid var(--grey);
-  border-bottom: none;
-}
-
-.rangepicker__cell {
-  position: relative;
-  height: auto;
-  padding: 6px 8px;
-  background-color: var(--white);
-  color: var(--grey-8);
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-  border-bottom: 1px solid var(--grey);
-  border-left: 1px solid var(--grey);
-  text-align: right;
-}
-
-.rangepicker__cell.rangepicker__cell_inactive {
-  background-color: var(--grey-light);
-}
-
 .rangepicker__event {
   --maxLines: 2;
   --lineHeight: 16px;
@@ -224,25 +76,7 @@ export default {
   margin-top: 4px;
 }
 
-@media all and (max-width: 767px) {
-  .rangepicker__cell:nth-child(5n + 1) {
-    border-left: none;
-  }
-}
-
 @media all and (min-width: 767px) {
-  .rangepicker__date-grid {
-    grid-template-columns: repeat(7, 1fr);
-  }
-
-  .rangepicker__cell {
-    height: 144px;
-  }
-
-  .rangepicker__cell:nth-child(7n + 1) {
-    border-left: none;
-  }
-
   .rangepicker__event {
     display: -webkit-box;
     -webkit-line-clamp: 2;

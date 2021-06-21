@@ -20,8 +20,6 @@
 </template>
 
 <script>
-import { ImageService } from '@/data';
-
 export default {
   name: 'ImageUploader',
 
@@ -29,6 +27,10 @@ export default {
     return {
       loading: false,
     };
+  },
+
+  inject: {
+    services: 'services',
   },
 
   props: {
@@ -45,9 +47,7 @@ export default {
   computed: {
     status() {
       if (!this.loading) {
-        return this.currentImageId !== null
-          ? 'Удалить изображение'
-          : 'Загрузить изображение';
+        return this.currentImageId !== null ? 'Удалить изображение' : 'Загрузить изображение';
       } else {
         return 'Загрузка...';
       }
@@ -56,9 +56,7 @@ export default {
       return this.imageId;
     },
     backgroundImage() {
-      return this.currentImageId
-        ? `--bg-image: url('${ImageService.getImageURL(this.currentImageId)}')`
-        : null;
+      return this.currentImageId ? `--bg-image: url('${this.services.getImageURL(this.currentImageId)}')` : null;
     },
   },
 
@@ -77,7 +75,7 @@ export default {
       }
     },
     async getNewId(value) {
-      return await ImageService.uploadImage(value).then((result) => {
+      return await this.services.uploadImage(value).then(result => {
         this.loading = false;
         return result.id;
       });
@@ -96,12 +94,7 @@ export default {
   --bg-image: var(--default-cover);
   background-size: cover;
   background-position: center;
-  background-image: linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.4),
-    rgba(0, 0, 0, 0.4)
-  ),
-  var(--bg-image);
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), var(--bg-image);
   border: 2px solid var(--blue-light);
   border-radius: 8px;
   transition: 0.2s border-color;

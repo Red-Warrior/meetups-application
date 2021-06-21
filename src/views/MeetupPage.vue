@@ -1,26 +1,22 @@
 <template>
-  <div v-if="reformedMeetup" class="bg-white">
-    <div class="meetup-cover" :style="reformedMeetup.image">
-      <h1 class="meetup-cover__title">{{ reformedMeetup.title }}</h1>
+  <div v-if="meetup" class="bg-white">
+    <div class="meetup-cover" :style="meetup.image">
+      <h1 class="meetup-cover__title">{{ meetup.title }}</h1>
     </div>
     <div class="container">
       <div class="meetup">
         <div class="meetup__content">
           <content-tabs :tabs="tabs">
-            <router-view :meetup="reformedMeetup" />
+            <router-view :meetup="meetup" />
           </content-tabs>
         </div>
 
         <div class="meetup__aside">
-          <meetup-info
-            :organizer="reformedMeetup.organizer"
-            :place="reformedMeetup.place"
-            :date="new Date(rawMeetup.date)"
-          />
+          <meetup-info :organizer="meetup.organizer" :place="meetup.place" :date="meetup.date" />
           <div class="meetup__aside-buttons">
             <primary-button>Участвовать</primary-button>
 
-            <primary-button tag="router-link" :to="{ name: 'edit', params: { meetupId: rawMeetup.id } }">
+            <primary-button tag="router-link" :to="{ name: 'edit', params: { meetupId: meetup.id } }">
               Редактировать
             </primary-button>
 
@@ -33,12 +29,11 @@
 </template>
 
 <script>
-import ContentTabs from '@/components/ContentTabs';
-import MeetupInfo from '@/components/MeetupInfo';
-import PrimaryButton from '@/components/PrimaryButton';
+import ContentTabs from '@/components/ui/ContentTabs';
+import MeetupInfo from '@/components/layouts/MeetupInfo';
+import PrimaryButton from '@/components/ui/PrimaryButton';
 // import SecondaryButton from '@/components/SecondaryButton';
-import DangerButton from '@/components/DangerButton';
-import { getMeetupCoverLink, fetchMeetup, agendaItemTitles, agendaItemIcons } from '@/data';
+import DangerButton from '@/components/ui/DangerButton';
 
 export default {
   name: 'MeetupPage',
@@ -50,13 +45,24 @@ export default {
     DangerButton,
   },
 
+  inject: {
+    services: 'services',
+  },
+
   data() {
     return {
-      rawMeetup: null,
+      title: null,
+      meetup: null,
       tabs: [
         { to: { name: 'meetup-description' }, text: 'Описание' },
         { to: { name: 'meetup-agenda' }, text: 'Программа' },
       ],
+    };
+  },
+
+  metaInfo() {
+    return {
+      title: this.title,
     };
   },
 
@@ -65,29 +71,6 @@ export default {
   },
 
   computed: {
-    reformedMeetup() {
-      if (this.rawMeetup !== null) {
-        return {
-          ...this.rawMeetup,
-          date: new Date(this.rawMeetup.date),
-          localDate: new Date(this.rawMeetup.date).toLocaleString(navigator.language, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          }),
-          ISODate: new Date(this.rawMeetup.date).toISOString().substr(0, 10),
-          agenda: this.rawMeetup.agenda.map(meetup => ({
-            ...meetup,
-            icon: agendaItemIcons[meetup.type],
-            title: meetup.title === null ? `${agendaItemTitles[meetup.type]}` : meetup.title,
-          })),
-          image: this.rawMeetup.imageId ? { '--bg-url': `url(${getMeetupCoverLink(this.rawMeetup)})` } : '',
-        };
-      } else {
-        return null;
-      }
-    },
-
     meetupId() {
       return this.$route.params.meetupId;
     },
@@ -95,7 +78,9 @@ export default {
 
   methods: {
     async fetchMeetup() {
-      this.rawMeetup = await fetchMeetup(this.meetupId);
+      const rawMeetup = await this.$meetupsApi.fetchMeetup(this.meetupId);
+      this.meetup = this.services.restructureMeetup(rawMeetup);
+      this.title = this.meetup.title;
     },
   },
 };

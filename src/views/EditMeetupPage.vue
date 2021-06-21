@@ -9,8 +9,7 @@
 </template>
 
 <script>
-import MeetupForm from '@/components/MeetupForm';
-import { fetchMeetup } from '@/data';
+import MeetupForm from '@/components/layouts/MeetupForm';
 export default {
   name: 'EditMeetupPage',
 
@@ -20,7 +19,14 @@ export default {
 
   data() {
     return {
+      title: 'Edit Meetup',
       meetup: null,
+    };
+  },
+
+  metaInfo() {
+    return {
+      title: this.title,
     };
   },
 
@@ -38,7 +44,7 @@ export default {
     },
 
     async fetchMeetup() {
-      this.meetup = await fetchMeetup(this.$route.params.meetupId);
+      this.meetup = this.$meetupsApi.fetchMeetup(this.$route.params.meetupId);
     },
   },
 };

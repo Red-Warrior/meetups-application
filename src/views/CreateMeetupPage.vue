@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import MeetupForm from '@/components/MeetupForm';
+import MeetupForm from '@/components/layouts/MeetupForm';
 export default {
   name: 'CreateMeetupPage',
 
@@ -13,6 +13,7 @@ export default {
 
   data() {
     return {
+      title: 'Create Meetup',
       meetup: {
         id: 0,
         title: '',
@@ -33,6 +34,12 @@ export default {
           },*/
         ],
       },
+    };
+  },
+
+  metaInfo() {
+    return {
+      title: this.title,
     };
   },
 

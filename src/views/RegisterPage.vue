@@ -39,13 +39,16 @@
 </template>
 
 <script>
-import FormGroup from '@/components/FormGroup';
-import AppInput from '@/components/AppInput';
-import PrimaryButton from '@/components/PrimaryButton';
-import { register } from '@/data';
+import FormGroup from '@/components/layouts/FormGroup';
+import AppInput from '@/components/ui/AppInput';
+import PrimaryButton from '@/components/ui/PrimaryButton';
 
 export default {
   name: 'RegisterPage',
+
+  inject: {
+    services: 'services',
+  },
 
   components: {
     FormGroup,
@@ -55,11 +58,18 @@ export default {
 
   data() {
     return {
+      title: 'Registration',
       email: '',
       fullName: '',
       password: '',
       repeatedPassword: '',
       checked: false,
+    };
+  },
+
+  metaInfo() {
+    return {
+      title: this.title,
     };
   },
 
@@ -76,8 +86,13 @@ export default {
       } else if (this.checked === false) {
         alert('Требуется согласиться с условиями');
       } else {
-        let result = await register(this.email, this.fullName, this.password);
-        alert(result.id ? result.id : result.message);
+        const { success } = this.services.toasterResult(
+          await this.services.withProgress(this.$authApi.register(this.email, this.fullName, this.password)),
+          { successToast: 'Регистрация выполнена успешно', errorToast: true }
+        );
+        if (success) {
+          await this.$router.push({ name: 'login' });
+        }
       }
     },
   },

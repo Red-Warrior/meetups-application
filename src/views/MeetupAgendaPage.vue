@@ -1,22 +1,14 @@
 <template>
   <div class="meetup-agenda">
     <p v-if="!meetup.agenda.length" class="meetup-agenda__empty">
-      Программа пока пуста, но когда-нибудь в ней обязательно что-нибудь
-      появится!
+      Программа пока пуста, но когда-нибудь в ней обязательно что-нибудь появится!
     </p>
     <template v-else>
-      <div
-        v-for="agendaItem in meetup.agenda"
-        :key="agendaItem.id"
-        class="meetup-agenda__item"
-      >
+      <div v-for="agendaItem in meetup.agenda" :key="agendaItem.id" class="meetup-agenda__item">
         <div class="meetup-agenda__item-col">
           <img class="icon" alt="icon" :src="`${agendaItem.icon}`" />
         </div>
-        <div
-          v-if="agendaItem.startsAt && agendaItem.endsAt"
-          class="meetup-agenda__item-col"
-        >
+        <div v-if="agendaItem.startsAt && agendaItem.endsAt" class="meetup-agenda__item-col">
           {{ agendaItem.startsAt }} - {{ agendaItem.endsAt }}
         </div>
         <div class="meetup-agenda__item-col">

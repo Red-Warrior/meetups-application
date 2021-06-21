@@ -39,10 +39,10 @@
 </template>
 
 <script>
-import FormGroup from '@/components/FormGroup';
-import AppInput from '@/components/AppInput';
-import AppIcon from '@/components/AppIcon';
-import DropdownButton from '@/components/DropdownButton';
+import FormGroup from '@/components/layouts/FormGroup';
+import AppInput from '@/components/ui/AppInput';
+import AppIcon from '@/components/ui/AppIcon';
+import DropdownButton from '@/components/ui/DropdownButton';
 
 import {
   getAgendaItemsFieldSpecifications,

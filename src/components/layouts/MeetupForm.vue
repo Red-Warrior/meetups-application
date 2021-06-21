@@ -1,7 +1,6 @@
 <template>
   <div class="page page_meetup-forms">
     <div class="container">
-
       <h1 v-if="this.$route.name === 'create'" class="page__title">Создание митапа</h1>
       <h1 v-else class="page__title">Редактирование митапа</h1>
 
@@ -62,16 +61,15 @@
 </template>
 
 <script>
-// const nanoid = require('nanoid');
 import { nanoid } from 'nanoid';
 
-import MeetupAgendaItemForm from '@/components/MeetupAgendaItemForm';
-import ImageUploader from '@/components/ImageUploader';
-import FormGroup from '@/components/FormGroup';
-import DateInput from '@/components/DateInput';
-import AppInput from '@/components/AppInput';
-import PrimaryButton from '@/components/PrimaryButton';
-import SecondaryButton from '@/components/SecondaryButton';
+import MeetupAgendaItemForm from '@/components/layouts/MeetupAgendaItemForm';
+import ImageUploader from '@/components/layouts/ImageUploader';
+import FormGroup from '@/components/layouts/FormGroup';
+import DateInput from '@/components/ui/DateInput';
+import AppInput from '@/components/ui/AppInput';
+import PrimaryButton from '@/components/ui/PrimaryButton';
+import SecondaryButton from '@/components/ui/SecondaryButton';
 
 function buildAgendaItem() {
   return {

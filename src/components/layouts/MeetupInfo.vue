@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import AppIcon from '@/components/AppIcon';
+import AppIcon from '@/components/ui/AppIcon';
 export default {
   name: 'MeetupInfo',
 

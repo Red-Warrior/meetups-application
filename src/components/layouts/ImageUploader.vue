@@ -20,15 +20,17 @@
 </template>
 
 <script>
-import { ImageService } from '@/data';
-
 export default {
-  name: 'ImageUploader',
+  name: "ImageUploader",
 
   data() {
     return {
       loading: false,
     };
+  },
+
+  inject: {
+    services: "services",
   },
 
   props: {
@@ -38,27 +40,23 @@ export default {
   },
 
   model: {
-    prop: 'imageId',
-    event: 'change',
+    prop: "imageId",
+    event: "change",
   },
 
   computed: {
     status() {
       if (!this.loading) {
-        return this.currentImageId !== null
-          ? 'Удалить изображение'
-          : 'Загрузить изображение';
+        return this.currentImageId !== null ? "Удалить изображение" : "Загрузить изображение";
       } else {
-        return 'Загрузка...';
+        return "Загрузка...";
       }
     },
     currentImageId() {
       return this.imageId;
     },
     backgroundImage() {
-      return this.currentImageId
-        ? `--bg-image: url('${ImageService.getImageURL(this.currentImageId)}')`
-        : null;
+      return this.currentImageId ? `--bg-image: url('${this.services.getImageURL(this.currentImageId)}')` : null;
     },
   },
 
@@ -66,21 +64,20 @@ export default {
     async changeImage() {
       let imageFile = this.$refs.input.files[0];
       this.loading = true;
-
-      return this.$emit('change', await this.getNewId(imageFile));
+      return this.$emit("change", await this.getNewId(imageFile));
     },
     resetImage(event) {
       if (this.imageId) {
         event.preventDefault();
-        this.$refs.input.value = '';
-        return this.$emit('change', null);
+        this.$refs.input.value = "";
+        return this.$emit("change", null);
       }
     },
     async getNewId(value) {
-      return await ImageService.uploadImage(value).then((result) => {
-        this.loading = false;
-        return result.id;
-      });
+      const imageId = await this.$uploadImage(value);
+      this.loading = false;
+      console.log(imageId);
+      return imageId;
     },
   },
 };
@@ -96,12 +93,7 @@ export default {
   --bg-image: var(--default-cover);
   background-size: cover;
   background-position: center;
-  background-image: linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.4),
-    rgba(0, 0, 0, 0.4)
-  ),
-  var(--bg-image);
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), var(--bg-image);
   border: 2px solid var(--blue-light);
   border-radius: 8px;
   transition: 0.2s border-color;
@@ -116,7 +108,7 @@ export default {
 
 .image-uploader .image-uploader__preview > span {
   color: var(--white);
-  font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   font-weight: 600;
   font-size: 20px;
   line-height: 28px;

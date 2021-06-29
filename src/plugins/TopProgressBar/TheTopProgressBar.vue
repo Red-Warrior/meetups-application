@@ -1,9 +1,9 @@
 <template>
   <div
-    class="progress"
-    :class="{ show: progressLine, failed: progressFail }"
-    :style="{ width: loadingValue }"
-  ></div>
+      class="progress"
+      :class="{ show: progressLine, failed: progressFail }"
+      :style="{ width: loadingValue }">
+  </div>
 </template>
 
 <script>
@@ -48,15 +48,11 @@ export default {
       let start = performance.now();
       let animationProgress = 0;
 
-      let step = (time) => {
+      let step = time => {
         animationProgress += ((time - start) / duration) * 100;
         this.loadingValue = animationProgress + '%';
         start = time;
-        if (
-          parseFloat(this.loadingValue) < 100 &&
-          !this.animationProcessFinish &&
-          !this.progressFail
-        ) {
+        if (parseFloat(this.loadingValue) < 100 && !this.animationProcessFinish && !this.progressFail) {
           requestAnimationFrame(step);
         }
       };
@@ -69,10 +65,9 @@ export default {
       let completedAnimation = parseFloat(this.loadingValue);
       let animationProgress = parseFloat(this.loadingValue);
 
-      let step = (time) => {
+      let step = time => {
         let progressFraction = ((time - start) / duration) * 100;
-        animationProgress +=
-          progressFraction - (progressFraction / 100) * completedAnimation;
+        animationProgress += progressFraction - (progressFraction / 100) * completedAnimation;
         this.loadingValue = animationProgress + '%';
         start = time;
         if (parseFloat(this.loadingValue) >= 100) {

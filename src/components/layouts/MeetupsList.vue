@@ -1,11 +1,7 @@
 <template>
   <div class="meetups-list fade-list">
     <transition-group name="fade-list">
-      <meetup-list-item
-        v-for="meetup in meetups"
-        :meetup="meetup"
-        :key="meetup.id"
-      />
+      <meetup-list-item v-for="meetup in meetups" :meetup="meetup" :key="meetup.id" />
     </transition-group>
   </div>
 </template>
@@ -29,6 +25,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

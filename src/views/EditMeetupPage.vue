@@ -1,16 +1,9 @@
 <template>
-  <meetup-form
-    v-if="meetup"
-    :meetup="meetup"
-    submit-text="Сохранить"
-    @submit="handleSubmit"
-    @cancel="handleCancel"
-  />
+  <meetup-form v-if="meetup" :meetup="meetup" submit-text="Сохранить" @submit="handleSubmit" @cancel="handleCancel" />
 </template>
 
 <script>
-import MeetupForm from '@/components/MeetupForm';
-import { fetchMeetup } from '@/data';
+import MeetupForm from '@/components/layouts/MeetupForm';
 export default {
   name: 'EditMeetupPage',
 
@@ -20,7 +13,14 @@ export default {
 
   data() {
     return {
+      title: 'Edit Meetup',
       meetup: null,
+    };
+  },
+
+  metaInfo() {
+    return {
+      title: this.title,
     };
   },
 
@@ -38,7 +38,13 @@ export default {
     },
 
     async fetchMeetup() {
-      this.meetup = await fetchMeetup(this.$route.params.meetupId);
+      const meetupIdResponse = await this.$meetupsApi.fetchMeetup(this.$route.params.meetupId);
+      if (meetupIdResponse.success) {
+        this.meetup = meetupIdResponse.result;
+      } else {
+        this.$Toaster.error(meetupIdResponse.error.message);
+        this.handleCancel();
+      }
     },
   },
 };

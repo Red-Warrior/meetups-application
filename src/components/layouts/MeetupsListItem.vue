@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import MeetupInfo from '@/components/MeetupInfo';
+import MeetupInfo from '@/components/layouts/MeetupInfo';
 
 export default {
   name: 'MeetupsListItem',

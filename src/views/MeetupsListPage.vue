@@ -2,10 +2,7 @@
   <div class="container">
     <div class="filters-panel">
       <div class="filters-panel__col">
-        <form-check
-          :options="$options.dateFilterOptions"
-          v-model="filter.date"
-        ></form-check>
+        <form-check :options="$options.dateFilterOptions" v-model="filter.date"></form-check>
       </div>
       <div class="filters-panel__col">
         <form-group id="filters-panel__search" inline>
@@ -21,36 +18,23 @@
       </div>
     </div>
 
-    <transition
-      v-if="filteredMeetups && filteredMeetups.length"
-      name="fade"
-      mode="out-in"
-    >
-      <meetups-list
-        v-if="view === 'list'"
-        :meetups="filteredMeetups"
-        key="list"
-      ></meetups-list>
-      <meetups-calendar
-        v-else-if="view === 'calendar'"
-        :meetups="filteredMeetups"
-        key="calendar"
-      ></meetups-calendar>
+    <transition v-if="filteredMeetups && filteredMeetups.length" name="fade" mode="out-in">
+      <meetups-list v-if="view === 'list'" :meetups="filteredMeetups" key="list"></meetups-list>
+      <meetups-calendar v-else-if="view === 'calendar'" :meetups="filteredMeetups" key="calendar"></meetups-calendar>
     </transition>
-    <app-empty v-else>Митапов по заданным условям не найдено...</app-empty>
+    <app-empty v-else>Митапов по заданным условиям не найдено...</app-empty>
   </div>
 </template>
 
 <script>
-import { fetchMeetups } from '@/data';
-import MeetupsList from '@/components/MeetupsList';
-import MeetupsCalendar from '@/components/MeetupsCalendar';
-import PageTabs from '@/components/PageTabs';
-import FormGroup from '@/components/FormGroup';
-import FormCheck from '@/components/FormCheck';
-import AppInput from '@/components/AppInput';
-import AppEmpty from '@/components/AppEmpty';
-import AppIcon from '@/components/AppIcon';
+import MeetupsList from '@/components/layouts/MeetupsList';
+import MeetupsCalendar from '@/components/layouts/MeetupsCalendar';
+import PageTabs from '@/components/ui/PageTabs';
+import FormGroup from '@/components/layouts/FormGroup';
+import FormCheck from '@/components/ui/FormCheck';
+import AppInput from '@/components/ui/AppInput';
+import AppEmpty from '@/components/layouts/AppEmpty';
+import AppIcon from '@/components/ui/AppIcon';
 
 export default {
   name: 'MeetupsListPage',
@@ -72,9 +56,14 @@ export default {
     AppIcon,
   },
 
+  inject: {
+    services: 'services',
+  },
+
   data() {
     return {
-      rawMeetups: [],
+      title: 'Meetups',
+      meetups: [],
       filter: {
         date: 'all',
         participation: 'all',
@@ -84,38 +73,24 @@ export default {
     };
   },
 
+  metaInfo() {
+    return {
+      title: this.title,
+    };
+  },
+
   mounted() {
     this.fetchMeetups();
   },
 
   computed: {
-    meetups() {
-      return this.rawMeetups.map(meetup => ({
-        ...meetup,
-        cover: meetup.imageId
-          ? `https://course-vue.javascript.ru/api/images/${meetup.imageId}`
-          : undefined,
-        date: new Date(meetup.date),
-        localDate: new Date(meetup.date).toLocaleString(navigator.language, {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }),
-        ISODate: new Date(meetup.date).toISOString().substr(0, 10),
-      }));
-    },
-
     filteredMeetups() {
       let filteredMeetups = this.meetups;
 
       if (this.filter.date === 'past') {
-        filteredMeetups = filteredMeetups.filter(
-          meetup => new Date(meetup.date) <= new Date()
-        );
+        filteredMeetups = filteredMeetups.filter(meetup => new Date(meetup.date) <= new Date());
       } else if (this.filter.date === 'future') {
-        filteredMeetups = filteredMeetups.filter(
-          meetup => new Date(meetup.date) > new Date()
-        );
+        filteredMeetups = filteredMeetups.filter(meetup => new Date(meetup.date) > new Date());
       }
 
       if (this.filter.participation === 'organizing') {
@@ -126,9 +101,7 @@ export default {
 
       if (this.filter.search) {
         const concatMeetupText = meetup =>
-          [meetup.title, meetup.description, meetup.place, meetup.organizer]
-            .join(' ')
-            .toLowerCase();
+          [meetup.title, meetup.description, meetup.place, meetup.organizer].join(' ').toLowerCase();
         filteredMeetups = filteredMeetups.filter(meetup =>
           concatMeetupText(meetup).includes(this.filter.search.toLowerCase())
         );
@@ -140,7 +113,8 @@ export default {
 
   methods: {
     async fetchMeetups() {
-      this.rawMeetups = await fetchMeetups();
+      const rowMeetups = await this.$meetupsApi.fetchMeetups();
+      this.meetups = this.services.restructureMeetups(rowMeetups);
     },
   },
 };

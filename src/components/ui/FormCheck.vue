@@ -1,10 +1,6 @@
 <template>
   <div class="form-check">
-    <div
-      v-for="option in options"
-      :key="option.value"
-      class="form-check__group"
-    >
+    <div v-for="option in options" :key="option.value" class="form-check__group">
       <input
         class="form-check__input"
         type="radio"

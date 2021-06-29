@@ -25,10 +25,9 @@
 </template>
 
 <script>
-import FormGroup from '@/components/FormGroup';
-import AppInput from '@/components/AppInput';
-import PrimaryButton from '@/components/PrimaryButton';
-import { login } from '@/data';
+import FormGroup from '@/components/layouts/FormGroup';
+import AppInput from '@/components/ui/AppInput';
+import PrimaryButton from '@/components/ui/PrimaryButton';
 
 export default {
   name: 'LoginPage',
@@ -41,8 +40,15 @@ export default {
 
   data() {
     return {
+      title: 'Authorization',
       email: '',
       password: '',
+    };
+  },
+
+  metaInfo() {
+    return {
+      title: this.title,
     };
   },
 
@@ -53,7 +59,7 @@ export default {
       } else if (this.password === '') {
         return alert('Требуется ввести пароль');
       } else {
-        let result = await login(this.email, this.password);
+        let result = this.$meetupsApi.login(this.email, this.password);
         alert(result.fullname ? result.fullname : result.message);
       }
     },

@@ -6,7 +6,6 @@
     v-bind="$attrs"
     v-on="$listeners"
   >
-    <!-- Так можно передать все слоты в дочерний компонент -->
     <template v-for="slot of Object.keys($slots)" v-slot:[slot]>
       <slot :name="slot" />
     </template>
@@ -22,12 +21,11 @@ export default {
   components: { AppInput },
 
   props: {
-    // Чтобы value не было в списке $attrs, его можно указать в списке параметров
     value: {},
     type: {
       type: String,
       default: 'date',
-      validator: (value) => ['date', 'time', 'datetime-local'].includes(value),
+      validator: value => ['date', 'time', 'datetime-local'].includes(value),
     },
     valueAsNumber: {
       type: Number,
@@ -42,30 +40,20 @@ export default {
       if (inputValueAsNumber.length <= 8) {
         let timeValue = inputValueAsNumber.split(':');
         if (timeValue.length === 2) {
-          inputValueAsNumber = new Date(this.actualParameter).setUTCHours(
-            timeValue[0],
-            timeValue[1],
-          );
+          inputValueAsNumber = new Date(this.actualParameter).setUTCHours(timeValue[0], timeValue[1]);
         } else {
-          inputValueAsNumber = new Date(this.actualParameter).setUTCHours(
-            timeValue[0],
-            timeValue[1],
-            timeValue[2],
-          );
+          inputValueAsNumber = new Date(this.actualParameter).setUTCHours(timeValue[0], timeValue[1], timeValue[2]);
         }
       }
-      let inputValueAsDate = inputValueAsNumber.valueAsDate
-        ? inputValueAsNumber.valueAsDate
-        : +inputValueAsNumber;
+      let inputValueAsDate = inputValueAsNumber.valueAsDate ? inputValueAsNumber.valueAsDate : +inputValueAsNumber;
       this.$emit('update:valueAsNumber', +new Date(inputValueAsNumber));
       this.$emit('update:valueAsDate', new Date(inputValueAsDate));
     },
 
     getDate(value) {
-      let monthAndDay = [
-        new Date(value).getUTCMonth() + 1,
-        new Date(value).getUTCDate(),
-      ].map((item) => item.toString().padStart(2, '0'));
+      let monthAndDay = [new Date(value).getUTCMonth() + 1, new Date(value).getUTCDate()].map(item =>
+        item.toString().padStart(2, '0')
+      );
       if (monthAndDay[0] === '00') {
         monthAndDay[0] = '12';
       }
@@ -73,11 +61,8 @@ export default {
     },
 
     getTime(value) {
-      let timeTwoPart = [
-        new Date(value).getUTCHours(),
-        new Date(value).getUTCMinutes(),
-      ]
-        .map((item) => item.toString().padStart(2, '0'))
+      let timeTwoPart = [new Date(value).getUTCHours(), new Date(value).getUTCMinutes()]
+        .map(item => item.toString().padStart(2, '0'))
         .join(':');
       let timeThreePart = `${timeTwoPart}:${new Date(value).getUTCSeconds()}`;
 

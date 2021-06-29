@@ -12,6 +12,18 @@
 <script>
 export default {
   name: 'NotFoundPage',
+
+  data() {
+    return {
+      title: '404 Not Found',
+    };
+  },
+
+  metaInfo() {
+    return {
+      title: this.title,
+    };
+  },
 };
 </script>
 

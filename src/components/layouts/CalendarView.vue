@@ -3,15 +3,9 @@
     <div class="rangepicker__calendar">
       <div class="rangepicker__month-indicator">
         <div class="rangepicker__selector-controls">
-          <button
-            @click="previousMonth"
-            class="rangepicker__selector-control-left"
-          ></button>
+          <button @click="previousMonth" class="rangepicker__selector-control-left"></button>
           <div>{{ calendarHeader.month }} {{ calendarHeader.year }}</div>
-          <button
-            @click="nextMonth"
-            class="rangepicker__selector-control-right"
-          ></button>
+          <button @click="nextMonth" class="rangepicker__selector-control-right"></button>
         </div>
       </div>
       <div class="rangepicker__date-grid">
@@ -55,35 +49,25 @@ export default {
       let currentMonth = [];
       let firstDay = new Date(this.currentDate.setDate(1));
 
-      let dayOfWeek = new Date(firstDay).setDate(
-        new Date(firstDay).getDate() - (new Date(firstDay).getDay() || 7) + 1,
-      );
+      let dayOfWeek = new Date(firstDay).setDate(new Date(firstDay).getDate() - (new Date(firstDay).getDay() || 7) + 1);
 
       for (let i = 0; i < 42; i++) {
         let currentDate = new Date(this.currentDate);
-        let currentDay = new Date(dayOfWeek).setDate(
-          new Date(dayOfWeek).getDate() + i,
-        );
+        let currentDay = new Date(dayOfWeek).setDate(new Date(dayOfWeek).getDate() + i);
 
         let matchingFirstDay =
-          new Date(
-            currentDate.setMonth(currentDate.getMonth() + 1),
-          ).getMonth() === new Date(currentDay).getMonth() &&
+          new Date(currentDate.setMonth(currentDate.getMonth() + 1)).getMonth() === new Date(currentDay).getMonth() &&
           new Date(currentDay).getDay() === 1;
         let matchingLastDay =
-          new Date(currentDay).getMonth() ===
-            new Date(
-              currentDate.setMonth(currentDate.getMonth() + 1),
-            ).getMonth() && new Date(currentDay).getDay() === 0;
+          new Date(currentDay).getMonth() === new Date(currentDate.setMonth(currentDate.getMonth() + 1)).getMonth() &&
+          new Date(currentDay).getDay() === 0;
 
         if (matchingFirstDay) break;
         if (matchingLastDay) break;
 
         currentMonth.push({
           currentDate: new Date(currentDay).getDate(),
-          currentMonth:
-            new Date(this.currentDate).getMonth() ===
-            new Date(currentDay).getMonth(),
+          currentMonth: new Date(this.currentDate).getMonth() === new Date(currentDay).getMonth(),
           dateToString: new Date(currentDay).toDateString(),
         });
       }
@@ -93,14 +77,10 @@ export default {
 
   methods: {
     nextMonth() {
-      this.currentDate = new Date(
-        this.currentDate.setMonth(this.currentDate.getMonth() + 1),
-      );
+      this.currentDate = new Date(this.currentDate.setMonth(this.currentDate.getMonth() + 1));
     },
     previousMonth() {
-      this.currentDate = new Date(
-        this.currentDate.setMonth(this.currentDate.getMonth() - 1),
-      );
+      this.currentDate = new Date(this.currentDate.setMonth(this.currentDate.getMonth() - 1));
     },
   },
 };
@@ -159,7 +139,7 @@ export default {
   justify-content: center;
   cursor: pointer;
   transition: 0.3s all;
-  background: url('../assets/icons/icon-pill-active.svg') left center no-repeat;
+  background: url('../../assets/icons/icon-pill-active.svg') left center no-repeat;
   background-size: cover;
 }
 

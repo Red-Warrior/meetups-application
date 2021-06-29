@@ -30,7 +30,7 @@ export default {
     icon: {
       type: String,
       required: true,
-      validate: (name) => Object.keys(iconMap).includes(name),
+      validate: name => Object.keys(iconMap).includes(name),
     },
   },
 

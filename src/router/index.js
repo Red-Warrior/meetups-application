@@ -1,13 +1,19 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import store from '@/store/index';
 
 Vue.use(VueRouter);
 
 export function scrollBehavior(to, from, savedPosition) {
-  return (savedPosition) ? savedPosition :
-    (to.hash) ? { selector: to.hash } :
-      !(to.meta.saveScrollPosition && from.meta.saveScrollPosition) ? { x: 0, y: 0 } :
-        to.matched.some((item) => item.meta.saveScrollPosition) ? false : { x: 0, y: 0 };
+  return savedPosition
+    ? savedPosition
+    : to.hash
+    ? { selector: to.hash }
+    : !(to.meta.saveScrollPosition && from.meta.saveScrollPosition)
+    ? { x: 0, y: 0 }
+    : to.matched.some(item => item.meta.saveScrollPosition)
+    ? false
+    : { x: 0, y: 0 };
 }
 
 export const router = new VueRouter({
@@ -28,7 +34,7 @@ export const router = new VueRouter({
     {
       path: '/meetups/:meetupId(\\d+)',
       name: 'meetup',
-      redirect: (to) => ({ name: 'meetup-description', params: to.params }),
+      redirect: to => ({ name: 'meetup-description', params: to.params }),
       meta: {
         showReturnToMeetups: true,
         saveScrollPosition: true,
@@ -70,8 +76,7 @@ export const router = new VueRouter({
       name: 'create',
       component: () => import('@/views/CreateMeetupPage'),
       meta: {
-        showCreateMeetupLinks: true,
-        hideLoginRegister: true,
+        requireAuth: true,
       },
     },
     {
@@ -79,8 +84,7 @@ export const router = new VueRouter({
       name: 'edit',
       component: () => import('@/views/EditMeetupPage'),
       meta: {
-        showCreateMeetupLinks: true,
-        hideLoginRegister: true,
+        requireAuth: true,
       },
     },
     {
@@ -89,3 +93,17 @@ export const router = new VueRouter({
     },
   ],
 });
+
+export function requireAuthGuard(to, from, next) {
+  if (to.matched.some(route => route.meta.requireAuth)) {
+    if (store.state.auth.user) {
+      next();
+    } else {
+      next(false);
+    }
+  } else {
+    next();
+  }
+}
+
+router.beforeEach(requireAuthGuard);

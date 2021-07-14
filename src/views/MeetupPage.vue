@@ -14,13 +14,17 @@
         <div class="meetup__aside">
           <meetup-info :organizer="meetup.organizer" :place="meetup.place" :date="meetup.date" />
           <div class="meetup__aside-buttons">
-            <primary-button>Участвовать</primary-button>
+            <template v-if="'attending' in meetup || !meetup.organizing">
+              <primary-button v-if="!attending" @click="addParticipation">Участвовать</primary-button>
+              <secondary-button v-else @click="cancelParticipation">Отменить участие</secondary-button>
+            </template>
 
-            <primary-button tag="router-link" :to="{ name: 'edit', params: { meetupId: meetup.id } }">
-              Редактировать
-            </primary-button>
-
-            <danger-button>Удалить</danger-button>
+            <template v-if="'organizing' in meetup">
+              <primary-button tag="router-link" :to="{ name: 'edit', params: { meetupId: meetup.id } }">
+                Редактировать
+              </primary-button>
+              <danger-button @click="deleteMeetup">Удалить</danger-button>
+            </template>
           </div>
         </div>
       </div>
@@ -32,8 +36,10 @@
 import ContentTabs from '@/components/ui/ContentTabs';
 import MeetupInfo from '@/components/layouts/MeetupInfo';
 import PrimaryButton from '@/components/ui/PrimaryButton';
-// import SecondaryButton from '@/components/SecondaryButton';
+import SecondaryButton from '@/components/ui/SecondaryButton';
 import DangerButton from '@/components/ui/DangerButton';
+import { toasterResult } from '@/helpers/toasterResult';
+import { withProgress } from '@/helpers/withProgress';
 
 export default {
   name: 'MeetupPage',
@@ -42,6 +48,7 @@ export default {
     ContentTabs,
     MeetupInfo,
     PrimaryButton,
+    SecondaryButton,
     DangerButton,
   },
 
@@ -53,6 +60,7 @@ export default {
     return {
       title: null,
       meetup: null,
+      attending: null,
       tabs: [
         { to: { name: 'meetup-description' }, text: 'Описание' },
         { to: { name: 'meetup-agenda' }, text: 'Программа' },
@@ -80,7 +88,32 @@ export default {
     async fetchMeetup() {
       const rawMeetup = await this.$meetupsApi.fetchMeetup(this.meetupId);
       this.meetup = this.services.restructureMeetup(rawMeetup);
+      this.attending = this.meetup.attending;
       this.title = this.meetup.title;
+    },
+
+    async addParticipation() {
+      this.attending = true;
+      toasterResult(await withProgress(this.$meetupsApi.addUserToMembers(this.meetupId)), {
+        successToast: 'Сохранено',
+        errorToast: true,
+      });
+    },
+
+    async cancelParticipation() {
+      this.attending = false;
+      toasterResult(await withProgress(this.$meetupsApi.deleteUserFromMembers(this.meetupId)), {
+        successToast: 'Сохранено',
+        errorToast: true,
+      });
+    },
+
+    async deleteMeetup() {
+      const response = confirm('Вы уверены? Это действие нельзя будет отменить.');
+      if (response) {
+        await withProgress(this.$meetupsApi.deleteMeetup(this.meetupId));
+        await this.$router.push({ path: '/' });
+      }
     },
   },
 };

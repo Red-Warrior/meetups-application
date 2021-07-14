@@ -3,7 +3,7 @@ export const API_URL = process.env.VUE_APP_API_URL;
 export const restructureMeetups = meetups => {
   return meetups.result
     .sort((firstMeetup, secondMeetup) => {
-      return firstMeetup.date > secondMeetup.date ? 1 : firstMeetup.date < secondMeetup.date ? -1 : 0;
+      return firstMeetup.date > secondMeetup.date ? -1 : firstMeetup.date < secondMeetup.date ? 1 : 0;
     })
     .map(meetup => ({
       ...meetup,

@@ -1,20 +1,20 @@
-import { httpClient } from "@/api/httpClient";
+import { httpClient } from '@/api/httpClient';
 
 export const meetupsApi = {
   fetchMeetups() {
-    return httpClient.get("/meetups");
+    return httpClient.get('/meetups');
   },
 
-  addMeetup() {
-    return httpClient.post("/meetups");
+  addMeetup(data) {
+    return httpClient.post('/meetups', data);
   },
 
   fetchMeetup(meetupId) {
     return httpClient.get(`/meetups/${meetupId}`);
   },
 
-  updateMeetup(meetupId) {
-    return httpClient.put(`/meetups/${meetupId}`);
+  updateMeetup(meetupId, meetup) {
+    return httpClient.put(`/meetups/${meetupId}`, meetup);
   },
 
   deleteMeetup(meetupId) {

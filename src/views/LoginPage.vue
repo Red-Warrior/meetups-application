@@ -28,6 +28,8 @@
 import FormGroup from '@/components/layouts/FormGroup';
 import AppInput from '@/components/ui/AppInput';
 import PrimaryButton from '@/components/ui/PrimaryButton';
+import { toasterResult } from '@/helpers/toasterResult';
+import { withProgress } from '@/helpers/withProgress';
 
 export default {
   name: 'LoginPage',
@@ -36,6 +38,10 @@ export default {
     FormGroup,
     AppInput,
     PrimaryButton,
+  },
+
+  inject: {
+    services: 'services',
   },
 
   data() {
@@ -59,8 +65,15 @@ export default {
       } else if (this.password === '') {
         return alert('Требуется ввести пароль');
       } else {
-        let result = this.$meetupsApi.login(this.email, this.password);
-        alert(result.fullname ? result.fullname : result.message);
+        const { success, result } = toasterResult(await withProgress(this.$authApi.login(this.email, this.password)), {
+          successToast: 'Вход выполнен успешно',
+          errorToast: true,
+        });
+        if (success) {
+          this.services.persistUserDataToLocalStorage(result);
+          this.$store.commit('auth/SET_USER', result.fullname);
+          await this.$router.push({ path: '/' });
+        }
       }
     },
   },

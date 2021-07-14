@@ -10,19 +10,19 @@
     <nav>
       <router-link v-if="showReturnToMeetups" :to="{ name: 'meetups-list' }"> &larr; Вернуться к списку</router-link>
 
-      <template v-if="hideLoginRegister">
-        <router-link :to="{ name: 'login' }">Войти</router-link>
-        <router-link :to="{ name: 'register' }">Зарегистрироваться</router-link>
+      <template v-if="!authorized">
+        <router-link :to="{ name: 'login' }">Вход</router-link>
+        <router-link :to="{ name: 'register' }">Регистрация</router-link>
       </template>
 
-      <template v-if="showCreateMeetupLinks">
+      <template v-if="authorized">
         <router-link to="/meetups?participation=attending">Мои митапы</router-link>
         <router-link to="/meetups?participation=organizing">Организуемые митапы</router-link>
       </template>
 
       <router-link :to="{ name: 'create' }">Создать митап</router-link>
 
-      <router-link to="">Выйти</router-link>
+      <a v-if="authorized" href="" @click="userLogout">{{ userName }} (выйти)</a>
     </nav>
   </div>
 </template>
@@ -31,15 +31,31 @@
 export default {
   name: 'TheHeader',
 
+  inject: {
+    services: 'services',
+  },
+
   computed: {
+    requireAuth() {
+      return this.$route.matched.some(route => route.meta.requireAuth);
+    },
+
     showReturnToMeetups() {
       return this.$route.matched.some(route => route.meta.showReturnToMeetups);
     },
-    showCreateMeetupLinks() {
-      return this.$route.matched.some(route => route.meta.showCreateMeetupLinks);
+
+    userName() {
+      return this.$store.state.auth.user;
     },
-    hideLoginRegister() {
-      return !this.$route.matched.some(route => route.meta.hideLoginRegister);
+
+    authorized() {
+      return this.$store.state.auth.user;
+    },
+  },
+
+  methods: {
+    userLogout() {
+      this.$authApi.logout();
     },
   },
 };

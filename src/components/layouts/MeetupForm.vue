@@ -24,7 +24,7 @@
             </form-group>
 
             <form-group label="Изображение">
-              <image-uploader v-model="imageId" />
+              <image-uploader v-model="localMeetup.imageId" />
             </form-group>
           </fieldset>
 
@@ -117,7 +117,6 @@ export default {
   data() {
     return {
       localMeetup: deepClone(this.meetup),
-      imageId: null,
     };
   },
 

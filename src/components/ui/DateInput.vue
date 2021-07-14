@@ -21,7 +21,7 @@ export default {
   components: { AppInput },
 
   props: {
-    value: {},
+    dateValue: {},
     type: {
       type: String,
       default: 'date',
@@ -85,7 +85,7 @@ export default {
       } else if (this.valueAsDate) {
         return this.valueAsDate;
       } else {
-        return this.value;
+        return this.dateValue;
       }
     },
 

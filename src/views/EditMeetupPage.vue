@@ -1,9 +1,17 @@
 <template>
-  <meetup-form v-if="meetup" :meetup="meetup" submit-text="Сохранить" @submit="handleSubmit" @cancel="handleCancel" />
+  <meetup-form
+    v-if="meetup"
+    :meetup="meetup"
+    submit-text="Сохранить"
+    @submit="handleSubmit($event)"
+    @cancel="handleCancel"
+  />
 </template>
 
 <script>
 import MeetupForm from '@/components/layouts/MeetupForm';
+import { toasterResult } from '@/helpers/toasterResult';
+import { withProgress } from '@/helpers/withProgress';
 export default {
   name: 'EditMeetupPage',
 
@@ -29,8 +37,21 @@ export default {
   },
 
   methods: {
-    handleSubmit(meetup) {
-      this.meetup = meetup;
+    async handleSubmit(updatedMeetup) {
+      const updatedMeetupDateChange = {
+        ...updatedMeetup,
+        date: new Date(updatedMeetup.date),
+      };
+      const { success } = toasterResult(
+        await withProgress(this.$meetupsApi.updateMeetup(updatedMeetup.id, JSON.stringify(updatedMeetupDateChange))),
+        {
+          successToast: 'Митап успешно создан',
+          errorToast: true,
+        }
+      );
+      if (success) {
+        await this.$router.push({ path: `/meetups/${this.meetup.id}` });
+      }
     },
 
     handleCancel() {

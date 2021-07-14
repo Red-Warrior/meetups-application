@@ -20,8 +20,11 @@
 </template>
 
 <script>
+import { toasterResult } from '@/helpers/toasterResult';
+import { withProgress } from '@/helpers/withProgress';
+
 export default {
-  name: "ImageUploader",
+  name: 'ImageUploader',
 
   data() {
     return {
@@ -30,7 +33,7 @@ export default {
   },
 
   inject: {
-    services: "services",
+    services: 'services',
   },
 
   props: {
@@ -40,21 +43,23 @@ export default {
   },
 
   model: {
-    prop: "imageId",
-    event: "change",
+    prop: 'imageId',
+    event: 'change',
   },
 
   computed: {
     status() {
       if (!this.loading) {
-        return this.currentImageId !== null ? "Удалить изображение" : "Загрузить изображение";
+        return this.currentImageId !== null ? 'Удалить изображение' : 'Загрузить изображение';
       } else {
-        return "Загрузка...";
+        return 'Загрузка...';
       }
     },
+
     currentImageId() {
       return this.imageId;
     },
+
     backgroundImage() {
       return this.currentImageId ? `--bg-image: url('${this.services.getImageURL(this.currentImageId)}')` : null;
     },
@@ -64,20 +69,34 @@ export default {
     async changeImage() {
       let imageFile = this.$refs.input.files[0];
       this.loading = true;
-      return this.$emit("change", await this.getNewId(imageFile));
+
+      return this.$emit('change', this.getNewId(imageFile));
     },
+
     resetImage(event) {
       if (this.imageId) {
         event.preventDefault();
-        this.$refs.input.value = "";
-        return this.$emit("change", null);
+        this.$refs.input.value = '';
+        return this.$emit('change', null);
       }
     },
+
     async getNewId(value) {
-      const imageId = await this.$uploadImage(value);
-      this.loading = false;
-      console.log(imageId);
-      return imageId;
+      const newImage = new FormData();
+      newImage.append('file', value);
+
+      return toasterResult(
+        await withProgress(
+          this.$uploadImage(newImage).then(response => {
+            this.loading = false;
+            return response.result.id;
+          })
+        ),
+        {
+          successToast: 'Изображение загружено',
+          errorToast: true,
+        }
+      );
     },
   },
 };
@@ -108,7 +127,7 @@ export default {
 
 .image-uploader .image-uploader__preview > span {
   color: var(--white);
-  font-family: "Nunito", sans-serif;
+  font-family: 'Nunito', sans-serif;
   font-weight: 600;
   font-size: 20px;
   line-height: 28px;

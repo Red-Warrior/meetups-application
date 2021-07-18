@@ -1,20 +1,27 @@
 import axios from 'axios';
 import { authApi } from '@/api/authApi';
+import { removeUserData } from '@/services/authServices';
 
 export const httpClient = axios.create({
   baseURL: process.env.VUE_APP_API_URL,
-  timeout: 1000,
+  timeout: 10000,
   withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
+  validateStatus: () => {
+    return true;
   },
+});
+
+httpClient.interceptors.response.use(response => {
+  if (response.status === 401) {
+    removeUserData();
+    authApi.logout();
+    location.reload();
+  }
 });
 
 httpClient.interceptors.response.use(
   response => {
-    if (response.status === 401) {
-      authApi.logout();
-    } else if (response.status === 400 || response.status > 401) {
+    if (response.status === 400 || response.status > 401) {
       return {
         success: false,
         result: null,

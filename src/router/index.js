@@ -99,7 +99,7 @@ export function requireAuthGuard(to, from, next) {
     if (store.state.auth.user) {
       next();
     } else {
-      next(false);
+      next({ name: 'login' });
     }
   } else {
     next();

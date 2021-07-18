@@ -69,8 +69,7 @@ export default {
     async changeImage() {
       let imageFile = this.$refs.input.files[0];
       this.loading = true;
-
-      return this.$emit('change', this.getNewId(imageFile));
+      return this.$emit('change', await this.getNewId(imageFile));
     },
 
     resetImage(event) {
@@ -85,11 +84,10 @@ export default {
       const newImage = new FormData();
       newImage.append('file', value);
 
-      return toasterResult(
+      const { success, result } = toasterResult(
         await withProgress(
-          this.$uploadImage(newImage).then(response => {
+          this.$uploadImage(newImage).finally(() => {
             this.loading = false;
-            return response.result.id;
           })
         ),
         {
@@ -97,6 +95,10 @@ export default {
           errorToast: true,
         }
       );
+      if (success) {
+        console.log(result.id);
+        return result.id;
+      }
     },
   },
 };

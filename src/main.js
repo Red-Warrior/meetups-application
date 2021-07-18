@@ -15,8 +15,8 @@ import {
   agendaItemTitles,
   agendaIconMap,
   agendaItemIcons,
-  getImageURL,
 } from '@/services/MeetupService';
+import { getImageURL } from '@/services/ImageService';
 
 Vue.config.productionTip = false;
 Vue.use(TheTopProgressBar, { router });
@@ -30,6 +30,7 @@ if (user) {
     .fetchUser()
     .then(user => {
       persistUserDataToLocalStorage(user);
+      store.commit('auth/SET_USER', user.result.fullname);
     })
     .catch(() => {
       authApi.logout();

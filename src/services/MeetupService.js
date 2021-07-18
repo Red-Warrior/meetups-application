@@ -192,7 +192,3 @@ export const getAgendaItemLanguageOptions = () => [
   { value: 'RU', text: 'RU' },
   { value: 'EN', text: 'EN' },
 ];
-
-export function getImageURL(meetupId) {
-  return meetupId !== null ? `/images/${meetupId}` : null;
-}

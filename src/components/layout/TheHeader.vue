@@ -55,7 +55,9 @@ export default {
 
   methods: {
     userLogout() {
+      this.services.removeUserData();
       this.$authApi.logout();
+      location.reload();
     },
   },
 };

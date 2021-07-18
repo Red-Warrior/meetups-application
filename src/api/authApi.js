@@ -1,5 +1,4 @@
 import { httpClient } from '@/api/httpClient';
-import { removeUserData } from '@/services/authServices';
 
 export const authApi = {
   fetchUser() {
@@ -22,8 +21,6 @@ export const authApi = {
   },
 
   logout() {
-    removeUserData();
-    location.reload();
     return httpClient.post('/auth/logout', {
       email: '',
       password: '',

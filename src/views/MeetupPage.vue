@@ -15,7 +15,7 @@
           <meetup-info :organizer="meetup.organizer" :place="meetup.place" :date="meetup.date" />
           <div class="meetup__aside-buttons">
             <template v-if="'attending' in meetup || !meetup.organizing">
-              <primary-button v-if="!attending" @click="addParticipation">Участвовать</primary-button>
+              <primary-button v-if="!meetup.attending" @click="addParticipation">Участвовать</primary-button>
               <secondary-button v-else @click="cancelParticipation">Отменить участие</secondary-button>
             </template>
 
@@ -60,7 +60,6 @@ export default {
     return {
       title: null,
       meetup: null,
-      attending: null,
       tabs: [
         { to: { name: 'meetup-description' }, text: 'Описание' },
         { to: { name: 'meetup-agenda' }, text: 'Программа' },
@@ -88,24 +87,23 @@ export default {
     async fetchMeetup() {
       const rawMeetup = await this.$meetupsApi.fetchMeetup(this.meetupId);
       this.meetup = this.services.restructureMeetup(rawMeetup);
-      this.attending = this.meetup.attending;
       this.title = this.meetup.title;
     },
 
     async addParticipation() {
-      this.attending = true;
       toasterResult(await withProgress(this.$meetupsApi.addUserToMembers(this.meetupId)), {
         successToast: 'Сохранено',
         errorToast: true,
       });
+      await this.fetchMeetup();
     },
 
     async cancelParticipation() {
-      this.attending = false;
       toasterResult(await withProgress(this.$meetupsApi.deleteUserFromMembers(this.meetupId)), {
         successToast: 'Сохранено',
         errorToast: true,
       });
+      await this.fetchMeetup();
     },
 
     async deleteMeetup() {

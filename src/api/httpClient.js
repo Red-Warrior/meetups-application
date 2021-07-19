@@ -11,17 +11,9 @@ export const httpClient = axios.create({
   },
 });
 
-httpClient.interceptors.response.use(response => {
-  if (response.status === 401) {
-    removeUserData();
-    authApi.logout();
-    location.reload();
-  }
-});
-
 httpClient.interceptors.response.use(
   response => {
-    if (response.status === 400 || response.status > 401) {
+    if (response.status >= 400) {
       return {
         success: false,
         result: null,
@@ -46,3 +38,11 @@ httpClient.interceptors.response.use(
     }
   }
 );
+
+httpClient.interceptors.response.use(response => {
+  if (response.error?.statusCode === 401) {
+    removeUserData();
+    authApi.logout();
+  }
+  return response;
+});

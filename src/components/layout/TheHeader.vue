@@ -49,7 +49,7 @@ export default {
     },
 
     authorized() {
-      return this.$store.state.auth.user;
+      return this.$store.getters['auth/IS_AUTHENTICATED'];
     },
   },
 

@@ -84,8 +84,8 @@ function buildAgendaItem() {
   };
 }
 
-function deepClone(a) {
-  return JSON.parse(JSON.stringify(a));
+function deepClone(meetup) {
+  return JSON.parse(JSON.stringify(meetup));
 }
 
 export default {

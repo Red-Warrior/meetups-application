@@ -1,3 +1,5 @@
+// import { IS_AUTHENTICATED, SET_USER } from './types';
+
 const state = () => ({
   user: null,
 });
@@ -14,16 +16,12 @@ const mutations = {
   },
 };
 
-/*const actions = {
-  LOGIN({ state, getters, commit }, { email, password }) {
-
-  },
-};*/
+const actions = {};
 
 export default {
   namespaced: true,
   state,
   getters,
   mutations,
-  // actions,
+  actions,
 };

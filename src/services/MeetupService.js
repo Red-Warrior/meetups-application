@@ -1,5 +1,3 @@
-export const API_URL = process.env.VUE_APP_API_URL;
-
 export const restructureMeetups = meetups => {
   return meetups.result
     .sort((firstMeetup, secondMeetup) => {
@@ -39,7 +37,7 @@ export function restructureMeetup({ result }) {
 }
 
 export function getMeetupCoverLink(meetup) {
-  return `${API_URL}/images/${meetup.imageId}`;
+  return `${process.env.VUE_APP_API_URL}/images/${meetup.imageId}`;
 }
 
 export const agendaItemTitles = {

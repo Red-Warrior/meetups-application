@@ -58,7 +58,6 @@ export default {
         await this.$router.push({ path: `/meetups/${result.id}` });
       }
     },
-
     handleCancel() {
       this.$router.go(-1);
     },

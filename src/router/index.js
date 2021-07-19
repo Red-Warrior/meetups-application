@@ -96,7 +96,7 @@ export const router = new VueRouter({
 
 export function requireAuthGuard(to, from, next) {
   if (to.matched.some(route => route.meta.requireAuth)) {
-    if (store.state.auth.user) {
+    if (store.getters['auth/IS_AUTHENTICATED']) {
       next();
     } else {
       next({ name: 'login' });

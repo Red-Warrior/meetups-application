@@ -20,10 +20,6 @@
 export default {
   name: 'ContentTabs',
 
-  data() {
-    return {};
-  },
-
   props: {
     tabs: {
       type: Array,

@@ -31,6 +31,8 @@ import PrimaryButton from '@/components/ui/PrimaryButton';
 import { toasterResult } from '@/helpers/toasterResult';
 import { withProgress } from '@/helpers/withProgress';
 
+import * as Types from '@/store/modules/types';
+
 export default {
   name: 'LoginPage',
 
@@ -71,7 +73,7 @@ export default {
         });
         if (success) {
           this.services.persistUserDataToLocalStorage(result);
-          this.$store.commit('auth/SET_USER', result.fullname);
+          this.$store.commit(`auth/${Types.SET_USER}`, result.fullname);
           await this.$router.push({ path: '/' });
         }
       }

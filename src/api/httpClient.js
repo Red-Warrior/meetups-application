@@ -6,8 +6,8 @@ export const httpClient = axios.create({
   baseURL: process.env.VUE_APP_API_URL,
   timeout: 10000,
   withCredentials: true,
-  validateStatus: () => {
-    return true;
+  validateStatus: status => {
+    return ![405, 408, 429].includes(status) && status < 500;
   },
 });
 

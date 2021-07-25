@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import * as Types from '@/store/modules/types';
+
 export default {
   name: 'TheHeader',
 
@@ -49,7 +51,7 @@ export default {
     },
 
     authorized() {
-      return this.$store.getters['auth/IS_AUTHENTICATED'];
+      return this.$store.getters[`auth/${Types.IS_AUTHENTICATED}`];
     },
   },
 

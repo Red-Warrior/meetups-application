@@ -17,6 +17,7 @@ import {
   agendaItemIcons,
 } from '@/services/MeetupService';
 import { getImageURL } from '@/services/ImageService';
+import * as Types from '@/store/modules/types';
 
 Vue.config.productionTip = false;
 Vue.use(TheTopProgressBar, { router });
@@ -26,11 +27,12 @@ Vue.use(VueMeta);
 
 const user = restoreUserData();
 if (user) {
+  store.commit(`auth/${Types.SET_USER}`, JSON.parse(user).fullname);
   authApi
     .fetchUser()
     .then(user => {
       persistUserDataToLocalStorage(user);
-      store.commit('auth/SET_USER', user.result.fullname);
+      store.commit(`auth/${Types.SET_USER}`, user.result.fullname);
     })
     .catch(() => {
       authApi.logout();

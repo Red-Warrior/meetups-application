@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import AppIcon from '../../components/ui/AppIcon';
+import AppIcon from '@/components/ui/AppIcon';
 
 let idCounter = 0;
 const DELAY = 5000;

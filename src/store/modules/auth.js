@@ -1,17 +1,17 @@
-// import { IS_AUTHENTICATED, SET_USER } from './types';
+import * as Types from '@/store/modules/types';
 
 const state = () => ({
   user: null,
 });
 
 const getters = {
-  IS_AUTHENTICATED(state) {
+  [Types.IS_AUTHENTICATED](state) {
     return !!state.user;
   },
 };
 
 const mutations = {
-  SET_USER(state, user) {
+  [Types.SET_USER](state, user) {
     state.user = user;
   },
 };

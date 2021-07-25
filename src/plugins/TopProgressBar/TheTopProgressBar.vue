@@ -1,9 +1,5 @@
 <template>
-  <div
-      class="progress"
-      :class="{ show: progressLine, failed: progressFail }"
-      :style="{ width: loadingValue }">
-  </div>
+  <div class="progress" :class="{ show: progressLine, failed: progressFail }" :style="{ width: loadingValue }"></div>
 </template>
 
 <script>

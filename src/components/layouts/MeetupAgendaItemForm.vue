@@ -43,15 +43,14 @@ import FormGroup from '@/components/layouts/FormGroup';
 import AppInput from '@/components/ui/AppInput';
 import AppIcon from '@/components/ui/AppIcon';
 import DropdownButton from '@/components/ui/DropdownButton';
-
-import {
-  getAgendaItemsFieldSpecifications,
-  // getAgendaItemTypes,
-  agendaItemTypes,
-} from '@/data';
+import { getAgendaItemsFieldSpecifications, agendaItemTypes } from '@/services/MeetupService';
 
 export default {
   name: 'MeetupAgendaItemForm',
+
+  inject: {
+    services: 'services',
+  },
 
   components: {
     FormGroup,

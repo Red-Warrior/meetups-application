@@ -23,18 +23,7 @@ export default {
         imageId: null,
         date: new Date(),
         place: '',
-        agenda: [
-          /*{
-            id: 0,
-            startsAt: '00:00',
-            endsAt: '00:00',
-            type: 'other',
-            title: null,
-            description: null,
-            speaker: null,
-            language: null,
-          },*/
-        ],
+        agenda: [],
       },
     };
   },
@@ -47,13 +36,10 @@ export default {
 
   methods: {
     async handleSubmit(meetup) {
-      const { success, result } = toasterResult(
-        await withProgress(this.$meetupsApi.addMeetup(JSON.stringify(meetup))),
-        {
-          successToast: 'Митап успешно создан',
-          errorToast: true,
-        }
-      );
+      const { success, result } = toasterResult(await withProgress(this.$meetupsApi.addMeetup(meetup)), {
+        successToast: 'Митап успешно создан',
+        errorToast: true,
+      });
       if (success) {
         await this.$router.push({ path: `/meetups/${result.id}` });
       }

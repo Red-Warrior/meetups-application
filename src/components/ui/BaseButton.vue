@@ -1,10 +1,5 @@
 <template>
-  <component
-    :is="tag"
-    :to="to"
-    class="button"
-    :class="{'button_block': block}"
-    v-on="$listeners">
+  <component :is="tag" :to="to" class="button" :class="{ button_block: block }" v-on="$listeners">
     <slot></slot>
   </component>
 </template>
@@ -18,7 +13,7 @@ export default {
     tag: {
       type: String,
       default: 'button',
-      validator: (value) => {
+      validator: value => {
         return ['button', 'a', 'router-link'].indexOf(value) !== -1;
       },
     },

@@ -19,7 +19,7 @@ export default {
         TopProgressBar.finish();
       });
 
-      option.router.onError((err) => {
+      option.router.onError(err => {
         TopProgressBar.fail();
         throw err;
       });

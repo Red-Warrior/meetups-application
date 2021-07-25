@@ -16,6 +16,17 @@ export const restructureMeetups = meetups => {
     }));
 };
 
+export const agendaItemTitles = {
+  registration: 'Регистрация',
+  opening: 'Открытие',
+  break: 'Перерыв',
+  coffee: 'Coffee Break',
+  closing: 'Закрытие',
+  afterparty: 'Afterparty',
+  talk: 'Доклад',
+  other: 'Другое',
+};
+
 export function restructureMeetup({ result }) {
   const rawMeetup = result;
   return {
@@ -39,17 +50,6 @@ export function restructureMeetup({ result }) {
 export function getMeetupCoverLink(meetup) {
   return `${process.env.VUE_APP_API_URL}/images/${meetup.imageId}`;
 }
-
-export const agendaItemTitles = {
-  registration: 'Регистрация',
-  opening: 'Открытие',
-  break: 'Перерыв',
-  coffee: 'Coffee Break',
-  closing: 'Закрытие',
-  afterparty: 'Afterparty',
-  talk: 'Доклад',
-  other: 'Другое',
-};
 
 export const agendaItemIcons = {
   registration: require('@/assets/icons/icon-key.svg'),
@@ -110,6 +110,12 @@ export const agendaItemTypes = [
   ...item,
   icon: agendaIconMap[item.value],
 }));
+
+export const getAgendaItemLanguageOptions = () => [
+  { value: null, text: 'Не указано' },
+  { value: 'RU', text: 'RU' },
+  { value: 'EN', text: 'EN' },
+];
 
 export const getAgendaItemsFieldSpecifications = () => {
   const common = [
@@ -184,9 +190,3 @@ export const getAgendaItemsFieldSpecifications = () => {
     ],
   };
 };
-
-export const getAgendaItemLanguageOptions = () => [
-  { value: null, text: 'Не указано' },
-  { value: 'RU', text: 'RU' },
-  { value: 'EN', text: 'EN' },
-];

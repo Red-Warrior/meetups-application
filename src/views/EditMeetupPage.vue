@@ -43,7 +43,7 @@ export default {
         date: new Date(updatedMeetup.date),
       };
       const { success } = toasterResult(
-        await withProgress(this.$meetupsApi.updateMeetup(updatedMeetup.id, JSON.stringify(updatedMeetupDateChange))),
+        await withProgress(this.$meetupsApi.updateMeetup(updatedMeetup.id, updatedMeetupDateChange)),
         {
           successToast: 'Митап успешно создан',
           errorToast: true,

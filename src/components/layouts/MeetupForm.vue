@@ -12,7 +12,7 @@
             </form-group>
 
             <form-group label="Дата">
-              <date-input :date-value.sync="localMeetup.date" />
+              <date-input :value.sync="localMeetup.date" />
             </form-group>
 
             <form-group label="Место проведения">

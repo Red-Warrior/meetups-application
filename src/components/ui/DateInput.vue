@@ -21,7 +21,7 @@ export default {
   components: { AppInput },
 
   props: {
-    dateValue: {},
+    value: {},
     type: {
       type: String,
       default: 'date',
@@ -46,8 +46,9 @@ export default {
         }
       }
       let inputValueAsDate = inputValueAsNumber.valueAsDate ? inputValueAsNumber.valueAsDate : +inputValueAsNumber;
-      this.$emit('update:valueAsNumber', +new Date(inputValueAsNumber));
-      this.$emit('update:valueAsDate', new Date(inputValueAsDate));
+      this.$emit('update:valueAsNumber', new Date(inputValueAsNumber));
+      // this.$emit('update:valueAsDate', new Date(inputValueAsDate));
+      this.$emit('update:value', new Date(inputValueAsDate));
     },
 
     getDate(value) {
@@ -85,7 +86,7 @@ export default {
       } else if (this.valueAsDate) {
         return this.valueAsDate;
       } else {
-        return this.dateValue;
+        return this.value;
       }
     },
 

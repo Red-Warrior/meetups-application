@@ -31,7 +31,7 @@ if (user) {
   authApi
     .fetchUser()
     .then(user => {
-      persistUserDataToLocalStorage(user);
+      persistUserDataToLocalStorage(user.result);
       store.commit(`auth/${Types.SET_USER}`, user.result.fullname);
     })
     .catch(() => {

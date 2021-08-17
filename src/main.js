@@ -30,9 +30,9 @@ if (user) {
   store.commit(`auth/${Types.SET_USER}`, JSON.parse(user).fullname);
   authApi
     .fetchUser()
-    .then(user => {
-      persistUserDataToLocalStorage(user.result);
-      store.commit(`auth/${Types.SET_USER}`, user.result.fullname);
+    .then(userData => {
+      persistUserDataToLocalStorage(userData.result);
+      store.commit(`auth/${Types.SET_USER}`, userData.result.fullname);
     })
     .catch(() => {
       authApi.logout();

@@ -5,15 +5,21 @@ import store from '@/store/index';
 Vue.use(VueRouter);
 
 export function scrollBehavior(to, from, savedPosition) {
-  return savedPosition
-    ? savedPosition
-    : to.hash
-    ? { selector: to.hash }
-    : !(to.meta.saveScrollPosition && from.meta.saveScrollPosition)
-    ? { x: 0, y: 0 }
-    : to.matched.some(item => item.meta.saveScrollPosition)
-    ? false
-    : { x: 0, y: 0 };
+  let scrollPosition;
+
+  if (savedPosition) {
+    scrollPosition = savedPosition;
+  } else if (to.hash) {
+    scrollPosition = { selector: to.hash };
+  } else if (!(to.meta.saveScrollPosition && from.meta.saveScrollPosition)) {
+    scrollPosition = { x: 0, y: 0 };
+  } else if (to.matched.some(item => item.meta.saveScrollPosition)) {
+    scrollPosition = false;
+  } else {
+    scrollPosition = { x: 0, y: 0 };
+  }
+
+  return scrollPosition;
 }
 
 export const router = new VueRouter({

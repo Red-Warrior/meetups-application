@@ -47,8 +47,7 @@ export default {
       }
       let inputValueAsDate = inputValueAsNumber.valueAsDate ? inputValueAsNumber.valueAsDate : +inputValueAsNumber;
       this.$emit('update:valueAsNumber', new Date(inputValueAsNumber));
-      // this.$emit('update:valueAsDate', new Date(inputValueAsDate));
-      this.$emit('update:value', new Date(inputValueAsDate));
+      this.$emit('update:valueAsDate', new Date(inputValueAsDate));
     },
 
     getDate(value) {

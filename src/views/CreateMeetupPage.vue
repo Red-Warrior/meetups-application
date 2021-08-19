@@ -21,7 +21,7 @@ export default {
         title: '',
         description: '',
         imageId: null,
-        date: new Date(),
+        date: Date.now(),
         place: '',
         agenda: [],
       },

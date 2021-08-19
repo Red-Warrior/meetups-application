@@ -25,9 +25,9 @@ Vue.use(MeetupsApi);
 Vue.use(AppToast);
 Vue.use(VueMeta);
 
-const user = restoreUserData();
-if (user) {
-  store.commit(`auth/${Types.SET_USER}`, JSON.parse(user).fullname);
+const user = JSON.parse(restoreUserData());
+if (user?.fullname) {
+  store.commit(`auth/${Types.SET_USER}`, user.fullname);
   authApi
     .fetchUser()
     .then(userData => {

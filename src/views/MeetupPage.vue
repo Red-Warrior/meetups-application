@@ -13,7 +13,8 @@
 
         <div class="meetup__aside">
           <meetup-info :organizer="meetup.organizer" :place="meetup.place" :date="meetup.date" />
-          <div class="meetup__aside-buttons">
+
+          <div v-if="authorized" class="meetup__aside-buttons">
             <template v-if="'attending' in meetup || !meetup.organizing">
               <primary-button v-if="!meetup.attending" @click="addParticipation">Участвовать</primary-button>
               <secondary-button v-else @click="cancelParticipation">Отменить участие</secondary-button>
@@ -40,6 +41,7 @@ import SecondaryButton from '@/components/ui/SecondaryButton';
 import DangerButton from '@/components/ui/DangerButton';
 import { toasterResult } from '@/helpers/toasterResult';
 import { withProgress } from '@/helpers/withProgress';
+import * as Types from '@/store/modules/types';
 
 export default {
   name: 'MeetupPage',
@@ -80,6 +82,10 @@ export default {
   computed: {
     meetupId() {
       return this.$route.params.meetupId;
+    },
+
+    authorized() {
+      return this.$store.getters[`auth/${Types.IS_AUTHENTICATED}`];
     },
   },
 

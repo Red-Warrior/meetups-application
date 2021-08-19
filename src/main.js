@@ -28,15 +28,12 @@ Vue.use(VueMeta);
 const user = JSON.parse(restoreUserData());
 if (user?.fullname) {
   store.commit(`auth/${Types.SET_USER}`, user.fullname);
-  authApi
-    .fetchUser()
-    .then(userData => {
+  authApi.fetchUser().then(userData => {
+    if (userData.success) {
       persistUserDataToLocalStorage(userData.result);
       store.commit(`auth/${Types.SET_USER}`, userData.result.fullname);
-    })
-    .catch(() => {
-      authApi.logout();
-    });
+    }
+  });
 }
 
 new Vue({

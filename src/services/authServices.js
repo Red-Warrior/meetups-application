@@ -1,11 +1,11 @@
 export function persistUserDataToLocalStorage(promiseResult) {
-  localStorage.setItem('userMeetupsApp', JSON.stringify(promiseResult));
+  localStorage.setItem('user', JSON.stringify(promiseResult));
 }
 
 export function restoreUserData() {
-  return localStorage.getItem('userMeetupsApp');
+  return localStorage.getItem('user');
 }
 
 export function removeUserData() {
-  return localStorage.removeItem('userMeetupsApp');
+  return localStorage.removeItem('user');
 }

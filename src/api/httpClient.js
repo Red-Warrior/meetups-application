@@ -42,7 +42,9 @@ httpClient.interceptors.response.use(
 httpClient.interceptors.response.use(response => {
   if (response.error?.statusCode === 401) {
     removeUserData();
-    authApi.logout();
+    authApi.logout().then(() => {
+      location.reload();
+    });
   }
   return response;
 });

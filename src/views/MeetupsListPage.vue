@@ -13,14 +13,18 @@
           </app-input>
         </form-group>
         <form-group inline>
-          <page-tabs :selected.sync="view" />
+          <page-tabs :selected.sync="filter.view" />
         </form-group>
       </div>
     </div>
 
     <transition v-if="filteredMeetups && filteredMeetups.length" name="fade" mode="out-in">
-      <meetups-list v-if="view === 'list'" :meetups="filteredMeetups" key="list"></meetups-list>
-      <meetups-calendar v-else-if="view === 'calendar'" :meetups="filteredMeetups" key="calendar"></meetups-calendar>
+      <meetups-list v-if="filter.view === 'list'" :meetups="filteredMeetups" key="list"></meetups-list>
+      <meetups-calendar
+        v-else-if="filter.view === 'calendar'"
+        :meetups="filteredMeetups"
+        key="calendar"
+      ></meetups-calendar>
     </transition>
     <app-empty v-else>Митапов по заданным условиям не найдено...</app-empty>
   </div>
@@ -35,6 +39,8 @@ import FormCheck from '@/components/ui/FormCheck';
 import AppInput from '@/components/ui/AppInput';
 import AppEmpty from '@/components/layouts/AppEmpty';
 import AppIcon from '@/components/ui/AppIcon';
+import { meetupsApi } from '@/api/meetupsApi';
+import Toaster from '@/plugins/AppToast';
 
 export default {
   name: 'MeetupsListPage',
@@ -65,11 +71,11 @@ export default {
       title: 'Meetups',
       meetups: [],
       filter: {
-        date: 'all',
-        participation: 'all',
-        search: '',
+        date: this.$route.query.date ?? 'all',
+        participation: this.$route.query.participation ?? 'all',
+        search: this.$route.query.search ?? '',
+        view: this.$route.query.view ?? 'list',
       },
-      view: 'list',
     };
   },
 
@@ -79,8 +85,45 @@ export default {
     };
   },
 
-  mounted() {
+  beforeRouteEnter(to, from, next) {
+    meetupsApi.fetchMeetups().then(res => {
+      if (!res.success) {
+        Toaster.error(res.error.message);
+      } else {
+        next(vm => {
+          vm.setMeetup(res.result);
+        });
+      }
+    });
+  },
+
+  /*  mounted() {
     this.fetchMeetups();
+  },*/
+
+  watch: {
+    queryParam() {
+      this.filter.view = this.$route.query.view ?? 'list';
+      this.filter.date = this.$route.query.date ?? 'all';
+      this.filter.participation = this.$route.query.participation ?? 'all';
+      this.filter.search = this.$route.query.search ?? '';
+    },
+
+    filter: {
+      handler() {
+        this.$router
+          .push(this.formQuery())
+          .then(route => {
+            if (route.path === this.$route.path) {
+              throw new Error('NavigationDuplicated');
+            }
+          })
+          .catch(() => {
+            console.log('%cNavigationDuplicated', 'background: red; color: black');
+          });
+      },
+      deep: true,
+    },
   },
 
   computed: {
@@ -109,12 +152,40 @@ export default {
 
       return filteredMeetups;
     },
+
+    queryParam() {
+      console.log(this.$route.query);
+      return this.$route.query;
+    },
   },
 
   methods: {
-    async fetchMeetups() {
+    setMeetup(meetup) {
+      this.meetups = this.services.restructureMeetups(meetup);
+    },
+
+    /*async fetchMeetups() {
       const rowMeetups = await this.$meetupsApi.fetchMeetups();
       this.meetups = this.services.restructureMeetups(rowMeetups);
+    },*/
+
+    formQuery() {
+      let queryString = {};
+
+      if (this.filter.date !== 'all') {
+        queryString.date = this.filter.date;
+      }
+      if (this.filter.participation !== 'all') {
+        queryString.participation = this.filter.participation;
+      }
+      if (this.filter.search !== '') {
+        queryString.search = this.filter.search;
+      }
+      if (this.filter.view !== 'list') {
+        queryString.view = this.filter.view;
+      }
+
+      return { query: queryString };
     },
   },
 };

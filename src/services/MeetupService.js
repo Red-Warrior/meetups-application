@@ -1,5 +1,5 @@
 export const restructureMeetups = meetups => {
-  return meetups.result
+  return meetups
     .sort((firstMeetup, secondMeetup) => {
       return firstMeetup.date > secondMeetup.date ? -1 : firstMeetup.date < secondMeetup.date ? 1 : 0;
     })
@@ -27,23 +27,22 @@ export const agendaItemTitles = {
   other: 'Другое',
 };
 
-export function restructureMeetup({ result }) {
-  const rawMeetup = result;
+export function restructureMeetup(result) {
   return {
-    ...rawMeetup,
-    date: new Date(rawMeetup.date),
-    localDate: new Date(rawMeetup.date).toLocaleString(navigator.language, {
+    ...result,
+    date: new Date(result.date),
+    localDate: new Date(result.date).toLocaleString(navigator.language, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     }),
-    ISODate: new Date(rawMeetup.date).toISOString().substr(0, 10),
-    agenda: rawMeetup.agenda.map(meetup => ({
+    ISODate: new Date(result.date).toISOString().substr(0, 10),
+    agenda: result.agenda.map(meetup => ({
       ...meetup,
       icon: agendaItemIcons[meetup.type],
       title: meetup.title === null ? `${agendaItemTitles[meetup.type]}` : meetup.title,
     })),
-    image: rawMeetup.imageId ? { '--bg-url': `url(${getMeetupCoverLink(rawMeetup)})` } : '',
+    image: result.imageId ? { '--bg-url': `url(${getMeetupCoverLink(result)})` } : '',
   };
 }
 

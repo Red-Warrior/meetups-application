@@ -48,6 +48,9 @@ import { getAgendaItemsFieldSpecifications, agendaItemTypes } from '@/services/M
 export default {
   name: 'MeetupAgendaItemForm',
 
+  agendaItemTypes: agendaItemTypes,
+  fieldSpecifications: getAgendaItemsFieldSpecifications(),
+
   inject: {
     services: 'services',
   },
@@ -58,9 +61,6 @@ export default {
     AppIcon,
     DropdownButton,
   },
-
-  agendaItemTypes: agendaItemTypes,
-  fieldSpecifications: getAgendaItemsFieldSpecifications(),
 
   data() {
     return {

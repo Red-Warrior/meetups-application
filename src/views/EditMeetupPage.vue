@@ -12,6 +12,9 @@
 import MeetupForm from '@/components/layouts/MeetupForm';
 import { toasterResult } from '@/helpers/toasterResult';
 import { withProgress } from '@/helpers/withProgress';
+import { meetupsApi } from '@/api/meetupsApi';
+import Toaster from '@/plugins/AppToast/index';
+
 export default {
   name: 'EditMeetupPage',
 
@@ -32,9 +35,22 @@ export default {
     };
   },
 
-  mounted() {
-    this.fetchMeetup();
+  beforeRouteEnter(to, from, next) {
+    meetupsApi.fetchMeetup(to.params.meetupId).then(res => {
+      if (!res.success) {
+        Toaster.error(res.error.message);
+        next('/');
+      } else {
+        next(vm => {
+          vm.setMeetup(res.result);
+        });
+      }
+    });
   },
+
+  /*  mounted() {
+    this.fetchMeetup();
+  },*/
 
   methods: {
     async handleSubmit(updatedMeetup) {
@@ -58,7 +74,7 @@ export default {
       this.$router.go(-1);
     },
 
-    async fetchMeetup() {
+    /*    async fetchMeetup() {
       const meetupIdResponse = await this.$meetupsApi.fetchMeetup(this.$route.params.meetupId);
       if (meetupIdResponse.success) {
         this.meetup = meetupIdResponse.result;
@@ -66,6 +82,10 @@ export default {
         this.$Toaster.error(meetupIdResponse.error.message);
         this.handleCancel();
       }
+    },*/
+
+    setMeetup(meetup) {
+      this.meetup = meetup;
     },
   },
 };

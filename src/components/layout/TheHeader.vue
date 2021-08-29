@@ -16,8 +16,10 @@
       </template>
 
       <template v-if="authorized">
-        <router-link to="/meetups?participation=attending">Мои митапы</router-link>
-        <router-link to="/meetups?participation=organizing">Организуемые митапы</router-link>
+        <router-link :to="{ name: 'meetups-list', query: { participation: 'attending' } }">Мои митапы</router-link>
+        <router-link :to="{ name: 'meetups-list', query: { participation: 'organizing' } }"
+          >Организуемые митапы</router-link
+        >
       </template>
 
       <router-link :to="{ name: 'create' }">Создать митап</router-link>
@@ -56,9 +58,9 @@ export default {
   },
 
   methods: {
-    userLogout() {
+    async userLogout() {
       this.services.removeUserData();
-      this.$authApi.logout();
+      await this.$authApi.logout();
       location.reload();
     },
   },

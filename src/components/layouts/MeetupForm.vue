@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import { cloneDeep as _cloneDeep } from 'lodash';
 import { nanoid } from 'nanoid';
 
 import MeetupAgendaItemForm from '@/components/layouts/MeetupAgendaItemForm';
@@ -84,9 +85,9 @@ function buildAgendaItem() {
   };
 }
 
-function deepClone(meetup) {
+/*function deepClone(meetup) {
   return JSON.parse(JSON.stringify(meetup));
-}
+}*/
 
 export default {
   name: 'MeetupForm',
@@ -116,13 +117,13 @@ export default {
 
   data() {
     return {
-      localMeetup: deepClone(this.meetup),
+      localMeetup: _cloneDeep(this.meetup),
     };
   },
 
   methods: {
     submitRecentData() {
-      this.$emit('submit', deepClone(this.localMeetup));
+      this.$emit('submit', _cloneDeep(this.localMeetup));
     },
     addAgendaItem() {
       let newItem = buildAgendaItem();

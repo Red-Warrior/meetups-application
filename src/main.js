@@ -4,8 +4,9 @@ import store from './store';
 import './assets/styles/app.css';
 import { router } from './router';
 import VueMeta from 'vue-meta';
-import TheTopProgressBar from '@/plugins/TopProgressBar/plugin';
-import AppToast from '@/plugins/AppToast/plugin';
+import TheTopProgressBarPlugin from '@/plugins/TopProgressBar/plugin';
+import Toaster from '@/plugins/AppToast/AppToast';
+import ToasterPlugin from '@/plugins/AppToast/plugin';
 import MeetupsApi from '@/plugins/ApiPlugin/plugin';
 import { authApi } from '@/api/authApi';
 import { persistUserDataToLocalStorage, restoreUserData, removeUserData } from '@/services/authServices';
@@ -20,9 +21,9 @@ import { getImageURL } from '@/services/ImageService';
 import * as Types from '@/store/modules/types';
 
 Vue.config.productionTip = false;
-Vue.use(TheTopProgressBar, { router });
+Vue.use(TheTopProgressBarPlugin, { router });
 Vue.use(MeetupsApi);
-Vue.use(AppToast);
+Vue.use(ToasterPlugin);
 Vue.use(VueMeta);
 
 const user = JSON.parse(restoreUserData());
@@ -58,6 +59,8 @@ new Vue({
 
 window.addEventListener('unhandledrejection', ({ reason: err }) => {
   if (err instanceof new Error()) {
-    this.$Toaster('Проблема с интернет соединением');
+    Toaster.error('Проблема с интернет соединением');
+    return;
   }
+  Toaster.error(err.message);
 });

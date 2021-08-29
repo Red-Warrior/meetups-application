@@ -42,6 +42,8 @@ import DangerButton from '@/components/ui/DangerButton';
 import { toasterResult } from '@/helpers/toasterResult';
 import { withProgress } from '@/helpers/withProgress';
 import * as Types from '@/store/modules/types';
+import { meetupsApi } from '@/api/meetupsApi';
+import Toaster from '@/plugins/AppToast/index';
 
 export default {
   name: 'MeetupPage',
@@ -75,8 +77,21 @@ export default {
     };
   },
 
-  mounted() {
+  /*mounted() {
     this.fetchMeetup();
+  },*/
+
+  beforeRouteEnter(to, from, next) {
+    meetupsApi.fetchMeetup(to.params.meetupId).then(res => {
+      if (!res.success) {
+        Toaster.error(res.error.message);
+        next('/');
+      } else {
+        next(vm => {
+          vm.setMeetup(res.result);
+        });
+      }
+    });
   },
 
   computed: {
@@ -90,11 +105,11 @@ export default {
   },
 
   methods: {
-    async fetchMeetup() {
+    /* async fetchMeetup() {
       const rawMeetup = await this.$meetupsApi.fetchMeetup(this.meetupId);
       this.meetup = this.services.restructureMeetup(rawMeetup);
       this.title = this.meetup.title;
-    },
+    },*/
 
     async addParticipation() {
       toasterResult(await withProgress(this.$meetupsApi.addUserToMembers(this.meetupId)), {
@@ -118,6 +133,11 @@ export default {
         await withProgress(this.$meetupsApi.deleteMeetup(this.meetupId));
         await this.$router.push({ path: '/' });
       }
+    },
+
+    setMeetup(meetup) {
+      this.meetup = this.services.restructureMeetup(meetup);
+      this.title = this.meetup.title;
     },
   },
 };
